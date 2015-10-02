@@ -4,6 +4,7 @@ close all;
 % Main image
 image = imread('cameraman.tif');
 f = image;
+imshow(image, []);
 
 imgInfo = imfinfo('cameraman.tif');
 imgWidth = imgInfo.Width;
@@ -18,12 +19,13 @@ N = imgHeight;
 LEN = 9;
 THETA = 0;
 PSF = fspecial('motion', LEN, THETA); % Point Spread Function
+%OTF  = psf2otf(PSF,[M N]); % PSF --> OTF
 OTF = fft2(PSF, M, N); % Optical Transfer Function
 figure, imshow(fftshift(abs(OTF)));
 title('Optical Transfer Function')
 
-% h = imfilter(f, hm);
-% figure; imshow(h, []);
+h = imfilter(f, PSF);
+figure; imshow(h, []);
 
 % % Zero padding
 % P = 2 * imgWidth;
@@ -42,36 +44,40 @@ F = fftshift(fft2(f));
 % Blur1 = FT_Padded * F;
 % imshow(Blur1,[]);
 
-H = fftshift(fft2(h));
+% H = fftshift(fft2(h));
+H = OTF; 
+
 %n = imnoise(f, 'gaussian', 0, 0.01);
-n = randn(imgWidth, imgHeight);
+n = 0.5 * randn(imgWidth, imgHeight);
 N = fftshift(fft2(n));
 
 figure; imshow(n, []);
 % Degraded function
-g = conv2(f, h, 'valid') + n;
-%G = H .* F + N;
-G = fftshift(fft2(g));
-figure; imshow(g, []);
+%g = conv2(f, h, 'valid') + n;
+%G = fftshift(fft2(g));
+G = H .* F + N;
+figure; imshow(ifft2(G), []);
 
 % Wiener Filter as per Prof PDF
-x1 = 1./H;
-x2 = mean(mean(abs(N)^2));
-x3 = ((abs(H)^2) * (abs(F)^2));
-x4 = x2./x3;
-x5 = 1./(1 + x4);
-Fcap = (x1.* x5).*G;
-
 % x1 = 1./H;
-% x2 = abs(H).^2;
-% x3 = 0.00001; %abs(N).^2 / abs(F).^2;
-% % Weiner filter
-% Fcap = (x1.*(x2./(x2 + x3))).*G;
-Icap = ifft2(ifftshift(Fcap));
-figure; imshow(abs(Icap), []); 
+% x2 = mean(mean(abs(N)^2));
+% x3 = ((abs(H)^2) * (abs(F)^2));
+% x4 = x2./x3;
+% x5 = 1./(1 + x4);
+% Fcap = (x1.* x5).*G;
 
-Icap = ifft2(ifftshift(F));
-figure; imshow(abs(Icap), []); 
+x1 = 1./H;
+x2 = abs(H).^2;
+x3 = 0.00001; %abs(N).^2 / abs(F).^2;
+% Weiner filter
+Fcap = (x1.*(x2./(x2 + x3))).*G;
+
+RestoredFT = Fcap;
+RestoredImage = ifft2(ifftshift(RestoredFT));
+figure; imshow(abs(RestoredImage), []); 
+
+% Icap = ifft2(ifftshift(F));
+% figure; imshow(abs(Icap), []); 
 
 
 % % Inverse Filter
