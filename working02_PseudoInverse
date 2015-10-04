@@ -1,3 +1,6 @@
+
+% Best result obtained with Wiener filter for k = 0.0005
+
 function working02_PseudoInverse()
 
 clear all;
@@ -39,7 +42,7 @@ F = fftshift(fft2(f));
 H = (G - N)./ F;
 %H = fftshift(OTF);
 
-for i = 0.01 : 0.05 : 0.5
+for i = 0.0001 : 0.0002 : 0.001
     WienerRestoreDisplay(H, G, N, F, i);
 end
 
