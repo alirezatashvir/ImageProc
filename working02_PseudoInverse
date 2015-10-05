@@ -34,7 +34,6 @@ g = double(gMediate) + n;
 figure; imshow(g,[]);
 
 G = fftshift(fft2(g));
-displayTransformed(OTF);
 
 N = fftshift(fft2(n));
 F = fftshift(fft2(f));
