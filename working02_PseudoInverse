@@ -10,8 +10,9 @@ f = double(image);
 imgInfo = imfinfo('cameraman.tif');
 imgWidth = imgInfo.Width;
 imgHeight = imgInfo.Height;
-
 figure; imshow(image, []);
+
+% Zero pad the image
 f = padding(f, imgWidth, imgHeight);
 imgWidth = imgWidth * 2;
 imgHeight = imgHeight * 2;
@@ -19,32 +20,32 @@ displayTransformed(f);
 
 % Degradation function
 PSF = fspecial('motion', 15, 0);
-OTF = fft2(PSF, imgWidth, imgHeight);
 
-% gMediate = imfilter(f, PSF, 'replicate');
-%figure; imshow(gMediate,[]);
+% Degrade the image using convolution of degradation function and image
 gMediate = conv2(f, PSF, 'valid');
 gMediate(imgWidth, imgHeight) = 0;
 figure; imshow(gMediate,[]);
 
-% n = wgn(imgWidth, imgWidth, 2);
-n = 1.2 * randn(imgWidth, imgHeight);
+% Noise - Gaussian using randn
+n = 2 * randn(imgWidth, imgHeight);
 
+% Add noise to degraded image
 g = double(gMediate) + n;
 figure; imshow(g,[]);
 
 G = fftshift(fft2(g));
-
 N = fftshift(fft2(n));
 F = fftshift(fft2(f));
 
+% Obtain the degradation function transform
 H = (G - N)./ F;
 
-
+% Wiener filter for different SNR (k) values
 for i = 0.0001 : 0.0002 : 0.001
     WienerRestoreDisplay(H, G, i);
 end
 
+% Apply pseudorandom filter
 PseudoInverse_RestoreDisplay(H, G);
 
 end
@@ -64,7 +65,7 @@ end
 function PseudoInverse_RestoreDisplay(H, G)
     Ha = abs(H);
     Hb = 1./Ha;
-    Hb(Hb > 1/0.0025) = 0;
+    Hb(Hb > 1/0.0025) = 0; % Here k = 0.0025 - to remove very high values
     Fcap = G ./ Ha;
     RestoredFT = Fcap;
     RestoredImage = ifft2(ifftshift(RestoredFT));
