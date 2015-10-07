@@ -45,3 +45,16 @@ RestoredFT = Fcap;
 RestoredImage = ifft2(ifftshift(RestoredFT));
 figure; imshow(abs(RestoredImage), []); 
 
+
+
+% Define power spectrum of corrupted image
+
+% first we should find the power spectrum of the crrupted image
+% then we should extrapolate the power spectrum of the frequency and find
+% the N
+
+% first should sample the freq
+
+power = log10(abs(G).^2);
+freq = log10(g);
+figure; plot(freq,power(:,1));

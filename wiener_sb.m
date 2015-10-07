@@ -101,6 +101,6 @@ figure; imshow(abs(RestoredImage), []);
 %% 
 
 imgInfo = imfinfo('cameraman.tif');
-imgWidth = imgInfo.Width
-imgHeight = imgInfo.Height
+imgWidth = imgInfo.Width;
+imgHeight = imgInfo.Height;
 %% 
