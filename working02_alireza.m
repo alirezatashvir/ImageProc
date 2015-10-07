@@ -55,6 +55,6 @@ figure; imshow(abs(RestoredImage), []);
 
 % first should sample the freq
 
-power = log10(abs(G).^2);
+power = log10(abs(fft2(g)).^2);
 freq = log10(g);
 figure; plot(freq,power(:,1));
