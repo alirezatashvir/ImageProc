@@ -22,28 +22,37 @@ displayTransformed(f);
 PSF = fspecial('motion', 15, 0);
 
 % Degrade the image using convolution of degradation function and image
-gMediate = conv2(f, PSF, 'valid');
-gMediate(imgWidth, imgHeight) = 0;
-figure; imshow(gMediate,[]);
+% gMediate = conv2(f, PSF, 'valid');
+% gMediate(imgWidth, imgHeight) = 0;
+% figure; imshow(gMediate,[]);
 
 % Noise - Gaussian using randn
-n = 2 * randn(imgWidth, imgHeight);
+n = 1*randn(imgWidth, imgHeight);
 
 % Add noise to degraded image
-g = double(gMediate) + n;
-figure; imshow(g,[]);
+% g = double(gMediate) + n;
+% figure; imshow(g,[]);
 
-G = fftshift(fft2(g));
+% G = fftshift(fft2(g));
 N = fftshift(fft2(n));
 F = fftshift(fft2(f));
 
 % Obtain the degradation function transform
-H = (G - N)./ F;
+H = fft2(PSF, imgWidth, imgHeight); 
+G = H.*F + N;
 
 % Wiener filter for different SNR (k) values
-for i = 0.0001 : 0.0002 : 0.001
-    WienerRestoreDisplay(H, G, i);
-end
+WienerRestoreDisplay(H, G, 0.00001);
+WienerRestoreDisplay(H, G, 0.00003);
+WienerRestoreDisplay(H, G, 0.00005);
+WienerRestoreDisplay(H, G, 0.00007);
+WienerRestoreDisplay(H, G, 0.0001);
+WienerRestoreDisplay(H, G, 0.0003);
+WienerRestoreDisplay(H, G, 0.0005);
+WienerRestoreDisplay(H, G, 0.0007);
+WienerRestoreDisplay(H, G, 0.001);
+WienerRestoreDisplay(H, G, 0.01);
+
 
 % Apply pseudorandom filter
 PseudoInverse_RestoreDisplay(H, G);
