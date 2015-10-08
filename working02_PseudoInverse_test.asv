@@ -76,8 +76,7 @@ function WienerRestoreDisplay(H, G, k)
     RestoredFT = Fcap;
     RestoredImage = ifft2(ifftshift(RestoredFT));
     figure; imshow(abs(RestoredImage), []);
-    %s = strcat('Wiener with NSR: ',
-    title(strcat('Wiener with NSR: ' , sprintf('%0.5e',k)));
+    title('Wiener with NSR: ' + str(k);
 end
 
 function PseudoInverse_RestoreDisplay(H, G, threshold)
