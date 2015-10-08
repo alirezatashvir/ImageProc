@@ -63,10 +63,7 @@ function working02_PseudoInverse()
     title('Wiener Filter - NSR Perseval theorem with the perfect image');
     
     WienerRestoreDisplay(H, G, estimated_nsr2);
-    title('Wiener Filter - NSR Perseval theorem with one different image');
-    
-    WienerRestoreDisplay(H, G, estimated_nsr3);
-    title('Wiener Filter - NSR Perseval theorem with some different images');
+    title('Wiener Filter - NSR Perseval theorem with the perfect image');
 
     % Apply pseudorandom filter
     PseudoInverse_RestoreDisplay(H, G, 0.0143);

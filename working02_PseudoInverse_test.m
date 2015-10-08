@@ -5,7 +5,7 @@ function working02_PseudoInverse()
     clc;
     
     % constants
-    sigma = 0.1;
+    sigma = 1;
     %weinerK = 0.0004;
     
     threshold = 0.025;
@@ -19,9 +19,9 @@ function working02_PseudoInverse()
     figure; imshow(image, []);
     
     % take another image
-    f1 = double(imread('ic.tif'));
-    f2 = double(imread('pout.tif'));
-    f3 = double(imread('gisela_couple.tiff'));
+    f1 = double(imread('img0.tiff'));
+    f2 = double(imread('img1.tiff'));
+    f3 = double(imread('img2.tiff'));
     
     % Zero pad the image
     f = padding(f, imgWidth, imgHeight);
