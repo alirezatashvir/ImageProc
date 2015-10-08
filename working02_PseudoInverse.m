@@ -6,6 +6,7 @@ function working02_PseudoInverse()
 
     NSR = 0.0008;
     SIGMA = 5;
+    PsudoThreshold = 0.0143;
 
     % Main image
     image = imread('cameraman.tif');
@@ -56,8 +57,15 @@ function working02_PseudoInverse()
     title('Wiener Filter - NSR constant');
 
     estimated_nsr = sum(n(:).^2)/sum(f(:).^2); % Perseval theorem with the perfect image
-    estimated_nsr2 = sum(n(:).^2)/sum(f1(:).^2); % Perseval theorem with one different image
-    estimated_nsr3 = sum(n(:).^2)/(sum(f1(:).^2) + sum(f2(:).^2) + sum(f3(:).^2))/3; % Perseval theorem with some different images
+    estimated_nsr2 = sum(n(:).^2)/sum(f3(:).^2); % Perseval theorem with one different image
+    estimated_nsr3 = sum(n(:).^2)/((sum(f1(:).^2) + sum(f2(:).^2) + sum(f3(:).^2))/3); % Perseval theorem with some different images
+    disp(['Power spectrum of perfect image ',num2str(sum(f(:).^2))]);
+    disp(['Power spectrum of image one ',num2str(sum(f1(:).^2))]);
+    disp(['Power spectrum of image two ',num2str(sum(f2(:).^2))]);
+    disp(['Power spectrum of image three ',num2str(sum(f3(:).^2))]);
+    disp(['Mean power spectrum of images ' , num2str((sum(f1(:).^2) + sum(f2(:).^2) + sum(f3(:).^2))/3)]);
+    disp(['Estimated NSR of image two ', num2str(estimated_nsr2)]);
+    disp(['Estimated NSR of all images ', num2str(estimated_nsr3)]);
     
     WienerRestoreDisplay(H, G, estimated_nsr);
     title('Wiener Filter - NSR Perseval theorem with the perfect image');
@@ -69,7 +77,7 @@ function working02_PseudoInverse()
     title('Wiener Filter - NSR Perseval theorem with some different images');
 
     % Apply pseudorandom filter
-    PseudoInverse_RestoreDisplay(H, G, 0.0143);
+    PseudoInverse_RestoreDisplay(H, G, PsudoThreshold);
     title('Pseudo Inverse Filter');
 
     end
