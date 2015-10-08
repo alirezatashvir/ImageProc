@@ -72,16 +72,6 @@ RestoredImage = ifft2(RestoredFT);
 figure; imshow(abs(RestoredImage), []);
 end
 
-% function PseudoInverse_RestoreDisplay(H, G)
-% Ha = abs(H);
-% Hb = 1./Ha;
-% Hb(Hb > 1/0.0025) = 0; % Here k = 0.0025 - to remove very high values
-% Fcap = G ./ Ha;
-% RestoredFT = Fcap;
-% RestoredImage = ifft2(ifftshift(RestoredFT));
-% figure; imshow(abs(RestoredImage), []);
-% end
-
 function PseudoInverse_RestoreDisplay(H, G, threshold)
     Ha = abs(H);
     Hb = 1./Ha;
