@@ -68,13 +68,13 @@ function working02_PseudoInverse()
     disp(['Estimated NSR of all images ', num2str(estimated_nsr3)]);
     
     WienerRestoreDisplay(H, G, estimated_nsr);
-    title('Wiener Filter - NSR Perseval theorem with the perfect image');
+    title('Wiener Filter - PS perfect image');
     
     WienerRestoreDisplay(H, G, estimated_nsr2);
-    title('Wiener Filter - NSR Perseval theorem with one different image');
+    title('Wiener Filter - PS different image');
     
     WienerRestoreDisplay(H, G, estimated_nsr3);
-    title('Wiener Filter - NSR Perseval theorem with some different images');
+    title('Wiener Filter - PS Multiple images');
 
     % Apply pseudorandom filter
     PseudoInverse_RestoreDisplay(H, G, PsudoThreshold);
