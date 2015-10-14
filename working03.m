@@ -4,9 +4,11 @@ function working03()
     close all;
     clc;
 
-    NSR = 0.0008;
-    SIGMA = 0.02;
-    PsudoThreshold = 0.025;
+    idealNSR = 0.01;
+    SIGMA = 0.01;
+    PsudoThreshold = 0.0143;
+    Theta = 0;
+    Len = 15;
 
     % Main image
     image = imread('cameraman.tif');
@@ -28,7 +30,7 @@ function working03()
     displayTransformed(f);
 
     % Degradation function
-    PSF = fspecial('motion', 15, 0);
+    PSF = fspecial('motion', Len, Theta);
 
     % Noise - Gaussian using randn
     n = SIGMA * randn(imgWidth, imgHeight);
@@ -53,12 +55,12 @@ function working03()
     title('In Image Domain - Using conv2');
 
     % Wiener filter for different NSR (k) values
-    WienerRestoreDisplay(H, G, NSR);
-    title('Wiener Filter - NSR constant');
+    WienerRestoreDisplay(H, G, idealNSR);
+    title('Wiener Filter - Ideal NSR constant');
 
-    estimated_nsr = sum(n(:).^2)/sum(f(:).^2); % Perseval theorem with the perfect image
-    estimated_nsr2 = sum(n(:).^2)/sum(f3(:).^2); % Perseval theorem with one different image
-    estimated_nsr3 = sum(n(:).^2)/((sum(f1(:).^2) + sum(f2(:).^2) + sum(f3(:).^2))/3); % Perseval theorem with some different images
+    estimated_nsr = sum(n(:).^2)/sum(f(:).^2); % Parseval theorem with the perfect image
+    estimated_nsr2 = sum(n(:).^2)/sum(f2(:).^2); % Parseval theorem with one different image
+    estimated_nsr3 = sum(n(:).^2)/((sum(f1(:).^2) + sum(f2(:).^2) + sum(f3(:).^2))/3); % Parseval theorem with some different images
     disp(['Power spectrum of perfect image ',num2str(sum(f(:).^2))]);
     disp(['Power spectrum of image one ',num2str(sum(f1(:).^2))]);
     disp(['Power spectrum of image two ',num2str(sum(f2(:).^2))]);
@@ -75,6 +77,8 @@ function working03()
     
     WienerRestoreDisplay(H, G, estimated_nsr3);
     title('Wiener Filter - PS Multiple images');
+    
+    
 
     % Apply pseudorandom filter
     PseudoInverse_RestoreDisplay(H, G, PsudoThreshold);
@@ -89,11 +93,11 @@ function working03()
 
         % Weiner filter
         Fcap = (x1.*(x2./(x2 + x3))).*G;
-        RestoredFT = Fcap;
-        RestoredImage = ifft2(RestoredFT);
+        RestoredImage = ifft2(ifftshift(Fcap));
         % Unpad
         RestoredImage = Unpad(RestoredImage);
-        figure; imshow(abs(RestoredImage), []);
+        figure; imshow(real(RestoredImage), []);
+       
     end
 
     function PseudoInverse_RestoreDisplay(H, G, threshold)
@@ -105,7 +109,7 @@ function working03()
         RestoredImage = real(ifft2(ifftshift(RestoredFT)));
         % Unpad
         RestoredImage = Unpad(RestoredImage);
-        figure; imshow(abs(RestoredImage), []);
+        figure; imshow(RestoredImage, []);
     end
 
     function FT_Padded = padding(f, imgWidth, imgHeight)
@@ -120,14 +124,14 @@ function working03()
             end
         end
         imshow(padded,[]);
-        FT_Padded = padded; %fftshift(fft2(padded));
+        FT_Padded = padded;
 end
 
 
 function unpadded = Unpad(paddedImage)
 
     unpadded = paddedImage;
-    [l b] = size(paddedImage)
+    [l, b] = size(paddedImage);
     unpadded(l/2:l, :) = [];
     unpadded(:, b/2:b) = [];
 
