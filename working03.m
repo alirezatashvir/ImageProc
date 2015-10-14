@@ -6,7 +6,7 @@ function working03()
 
     idealNSR = 0.01;
     SIGMA = 0.01;
-    PsudoThreshold = 0.0143;
+    PsudoThreshold = 0.025;
     Theta = 0;
     Len = 15;
 
