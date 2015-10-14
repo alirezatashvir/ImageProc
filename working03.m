@@ -42,7 +42,7 @@ function working03()
     H = fftshift(fft2(PSF, imgWidth, imgHeight));
     G = H.*F + N;
 
-    figure; imshow(ifft2(ifftshift(G)), []);
+    figure; imshow(real(ifft2(ifftshift(G))), []);
     title('In Fourier domain');
 
     % Use convolution of PSF and original image
@@ -51,7 +51,7 @@ function working03()
     FFT_Hf = fftshift(fft2(Hf));
     G1 = FFT_Hf + N;
 
-    figure; imshow(ifft2(ifftshift(G1)), []);
+    figure; imshow(real(ifft2(ifftshift(G1))), []);
     title('In Image Domain - Using conv2');
 
     % Wiener filter for different NSR (k) values
